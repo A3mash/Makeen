@@ -45,11 +45,15 @@ async function executeWithRetry<T>(apiCall: () => Promise<T>, maxRetries = 3): P
                           error.message?.includes('Quota') ||
                           error.message?.includes('exceeded');
                           
-      if (isRateLimit && i < maxRetries - 1) {
-        rotateApiKey();
-        const delay = 5000 * (i + 1); // Short delay if rotating
-        console.warn(`Rate limit hit (429). Rotating key and waiting ${delay/1000}s (Attempt ${i + 1}/${maxRetries})...`);
-        await sleep(delay);
+      if (isRateLimit) {
+        if (i < maxRetries - 1) {
+          rotateApiKey();
+          const delay = 5000 * (i + 1); // Short delay if rotating
+          console.warn(`Rate limit hit (429). Rotating key and waiting ${delay/1000}s (Attempt ${i + 1}/${maxRetries})...`);
+          await sleep(delay);
+        } else {
+          throw new Error("نفد الرصيد اليومي لمفتاح (Gemini API) الحالي. إذا أضفت مفاتيح جديدة في Vercel، يرجى العمل بـ Redeploy لإعادة بناء الموقع بالمفاتيح الجديدة.");
+        }
       } else {
         throw error;
       }
