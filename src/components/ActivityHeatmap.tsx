@@ -87,30 +87,34 @@ export default function ActivityHeatmap() {
         <h3 className="font-title-md text-on-surface font-bold">نشاطك الدراسي</h3>
       </div>
       
-      {/* Month Labels */}
-      <div className="flex text-label-sm text-on-surface-variant mb-2 pr-8 overflow-hidden">
-        {months.map((m, i) => (
-          <div key={i} style={{ width: `${(m.colSpan / 90) * 100}%` }} className="text-right truncate">
-            {m.name}
-          </div>
-        ))}
-      </div>
-
-      {/* Heatmap Grid */}
-      <div className="flex flex-col gap-1 w-full relative">
-        <div className="flex flex-wrap flex-col h-[100px] content-start gap-1">
-          {days.map((day, idx) => (
-            <div
-              key={idx}
-              onClick={() => setSelectedDay(day)}
-              className={`w-3 h-3 rounded-[2px] border ${getColor(day.count)} transition-all hover:scale-125 cursor-pointer relative group`}
-            >
-              {/* Tooltip on hover for quick viewing */}
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-on-surface text-surface text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap z-10 transition-opacity">
-                {day.dateString}
+      <div className="overflow-x-auto w-full custom-scrollbar pb-4">
+        <div className="w-max">
+          {/* Month Labels */}
+          <div className="flex text-label-sm text-on-surface-variant mb-2 w-full">
+            {months.map((m, i) => (
+              <div key={i} style={{ width: `${(m.colSpan / 90) * 100}%` }} className="text-right truncate px-1 text-[11px] font-medium text-on-surface-variant/70">
+                {m.name}
               </div>
+            ))}
+          </div>
+
+          {/* Heatmap Grid */}
+          <div className="flex flex-col gap-1 w-max relative">
+            <div className="flex flex-wrap flex-col h-[100px] content-start gap-1">
+              {days.map((day, idx) => (
+                <div
+                  key={idx}
+                  onClick={() => setSelectedDay(day)}
+                  className={`w-3 h-3 rounded-[2px] border ${getColor(day.count)} transition-all hover:scale-125 cursor-pointer relative group`}
+                >
+                  {/* Tooltip on hover for quick viewing */}
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-on-surface text-surface text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap z-10 transition-opacity">
+                    {day.dateString}
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
 
