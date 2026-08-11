@@ -96,13 +96,13 @@ export default function ActivityHeatmap() {
           </div>
 
           {/* Heatmap Grid */}
-          <div className="flex flex-col gap-1 w-max relative">
-            <div className="flex flex-wrap flex-col h-[100px] content-start gap-1">
+          <div className="flex flex-col gap-1.5 w-max relative mt-2">
+            <div className="flex flex-wrap flex-col h-[130px] content-start gap-1.5">
               {days.map((day, idx) => (
                 <div
                   key={idx}
                   onClick={() => setSelectedDay(day)}
-                  className={`w-3 h-3 rounded-[2px] border ${getColor(day.count)} transition-all hover:scale-125 cursor-pointer relative group`}
+                  className={`w-4 h-4 rounded-[3px] border ${getColor(day.count)} transition-all hover:scale-125 cursor-pointer relative group`}
                 >
                   {/* Tooltip on hover for quick viewing */}
                   <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-on-surface text-surface text-xs px-2 py-1 rounded pointer-events-none whitespace-nowrap z-10 transition-opacity">
@@ -115,12 +115,12 @@ export default function ActivityHeatmap() {
         </div>
       </div>
 
-      <div className="mt-2 flex items-center justify-center w-full gap-2 text-label-sm text-on-surface-variant">
+      <div className="mt-6 flex items-center justify-center w-full gap-3 text-label-md font-medium text-on-surface-variant">
         <span>أقل</span>
-        <div className="w-3 h-3 rounded-[2px] bg-surface-container-high border border-outline-variant/30"></div>
-        <div className="w-3 h-3 rounded-[2px] bg-primary-fixed-dim/50 border border-primary-fixed-dim"></div>
-        <div className="w-3 h-3 rounded-[2px] bg-primary border border-primary"></div>
-        <div className="w-3 h-3 rounded-[2px] bg-on-primary-fixed-variant border border-on-primary-fixed-variant"></div>
+        <div className="w-4 h-4 rounded-[3px] bg-surface-container-high border border-outline-variant/30"></div>
+        <div className="w-4 h-4 rounded-[3px] bg-primary-fixed-dim/50 border border-primary-fixed-dim"></div>
+        <div className="w-4 h-4 rounded-[3px] bg-primary border border-primary"></div>
+        <div className="w-4 h-4 rounded-[3px] bg-on-primary-fixed-variant border border-on-primary-fixed-variant"></div>
         <span>أكثر</span>
       </div>
 
