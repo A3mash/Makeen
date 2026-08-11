@@ -12,7 +12,7 @@ export default defineConfig({
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'document' || request.destination === 'script' || request.destination === 'style',
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             options: {
               cacheName: 'assets-cache',
               expiration: {
