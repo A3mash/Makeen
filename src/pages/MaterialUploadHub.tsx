@@ -105,11 +105,29 @@ export default function MaterialUploadHub() {
   const handleYoutubeSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!youtubeLink) return;
-    setUploadStatus('جاري جلب تفريغ الفيديو...');
+    setIsUploading(true);
+    setUploadStatus('جاري جلب تفريغ الفيديو من يوتيوب...');
     
-    // Mock YouTube transcription fetch
-    const mockTranscript = "هذا نص تجريبي مستخرج من رابط يوتيوب. في البيئة الفعلية سيتم سحب الترجمة التلقائية (Subtitles) أو استخدام خدمة لتفريغ الفيديو صوتياً.";
-    await processText(mockTranscript, "فيديو يوتيوب", youtubeLink, 'YouTube');
+    try {
+      const response = await fetch(`/api/youtube-transcript?url=${encodeURIComponent(youtubeLink)}`);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'فشل جلب تفريغ الفيديو. قد لا يحتوي الفيديو على ترجمة.');
+      }
+      
+      const data = await response.json();
+      if (!data.transcript) {
+         throw new Error('لم يتم العثور على تفريغ نصي في الرد.');
+      }
+      
+      // Process the fetched transcript (splits it into chunks and generates questions)
+      await processText(data.transcript, "فيديو يوتيوب", youtubeLink, 'YouTube');
+    } catch (error: any) {
+      console.error("YouTube Fetch Error:", error);
+      alert(`حدث خطأ: ${error.message || error}`);
+      setIsUploading(false);
+      setUploadStatus('');
+    }
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
