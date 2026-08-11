@@ -77,8 +77,6 @@ export const questionSchemaDescription = `
 
 export async function generateQuizFromText(chunkedText: string, materialId: string): Promise<Question[]> {
   
-  const model = getGenAIModel("gemini-flash-latest", 0.2);
-
   const prompt = `
 أنت معلم أكاديمي خبير. مهمتك هي توليد أسئلة اختيار من متعدد (MCQ) باللغة العربية بناءً على النص التالي.
 تأكد من الآتي:
@@ -95,7 +93,8 @@ ${chunkedText}
   `;
 
   try {
-    const result = await executeWithRetry(() => model.generateContent(prompt));
+    // Model is created INSIDE the retry callback so it uses the rotated key
+    const result = await executeWithRetry(() => getGenAIModel("gemini-flash-latest", 0.2).generateContent(prompt));
     let responseText = result.response.text();
     
     // Strip markdown JSON blocks if present
@@ -146,8 +145,6 @@ export async function remediateKnowledgeGap(
   correctAnswer: string
 ): Promise<RemediationResult> {
 
-  const model = getGenAIModel("gemini-flash-latest", 0.3);
-
   const prompt = `
 الطالب اختار إجابة خاطئة لسؤال أكاديمي.
 السؤال: ${questionText}
@@ -162,7 +159,7 @@ ${remediationSchemaDescription}
   `;
 
   try {
-    const result = await executeWithRetry(() => model.generateContent(prompt));
+    const result = await executeWithRetry(() => getGenAIModel("gemini-flash-latest", 0.3).generateContent(prompt));
     let responseText = result.response.text();
     responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
     return JSON.parse(responseText) as RemediationResult;
@@ -173,8 +170,6 @@ ${remediationSchemaDescription}
 }
 
 export async function generateMaterialMetadata(textChunk: string): Promise<{title: string, topic: string}> {
-  const model = getGenAIModel("gemini-flash-latest", 0.3);
-
   const prompt = `
 أنت مساعد ذكي لتنظيم المواد الدراسية. بناءً على هذا المقتطف من مادة دراسية، اقترح:
 1. عنواناً مناسباً ومختصراً للمادة (title).
@@ -190,7 +185,7 @@ ${textChunk.substring(0, 1000)}
   `;
 
   try {
-    const result = await executeWithRetry(() => model.generateContent(prompt));
+    const result = await executeWithRetry(() => getGenAIModel("gemini-flash-latest", 0.3).generateContent(prompt));
     let responseText = result.response.text();
     responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
     return JSON.parse(responseText);
