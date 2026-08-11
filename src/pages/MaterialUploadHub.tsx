@@ -335,26 +335,32 @@ export default function MaterialUploadHub() {
         </section>
       </main>
 
-      {/* Toast Notification */}
+      {/* Success Modal */}
       {toastNotification && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-entrance w-full max-w-sm px-4">
-          <div className="bg-surface-container-lowest border border-primary shadow-[0_10px_40px_-10px_rgba(0,32,69,0.2)] rounded-2xl p-5 flex flex-col gap-4">
-            <div className="flex items-start gap-3 text-primary">
-              <span className="material-symbols-outlined text-3xl">check_circle</span>
-              <p className="font-bold text-on-surface mt-1">{toastNotification.message}</p>
+        <div className="fixed inset-0 z-[100] bg-on-background/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-surface-container-lowest border border-primary shadow-[0_10px_40px_-10px_rgba(0,32,69,0.2)] rounded-2xl p-8 flex flex-col items-center text-center gap-6 max-w-md w-full animate-entrance">
+            <div className="w-20 h-20 rounded-full bg-primary-container text-primary flex items-center justify-center mb-2">
+              <span className="material-symbols-outlined text-[48px]">task_alt</span>
             </div>
-            <div className="flex gap-2">
+            
+            <h3 className="font-headline-sm font-bold text-on-surface">اكتملت المعالجة بنجاح!</h3>
+            <p className="text-body-lg text-on-surface-variant font-medium leading-relaxed">
+              {toastNotification.message}
+            </p>
+            
+            <div className="flex flex-col gap-3 w-full mt-4">
               <button 
                 onClick={() => navigate(`/quiz/${toastNotification.materialId}`)}
-                className="flex-1 bg-primary text-on-primary py-2 rounded-xl font-bold hover:bg-primary/90 transition-colors"
+                className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-sm text-lg flex justify-center items-center gap-2"
               >
-                بدء الاختبار
+                <span className="material-symbols-outlined text-[20px]">play_arrow</span>
+                بدء الاختبار الآن
               </button>
               <button 
                 onClick={() => setToastNotification(null)}
-                className="flex-1 bg-surface-container-high text-on-surface py-2 rounded-xl font-bold hover:bg-surface-container-highest transition-colors"
+                className="w-full bg-surface-container-high border border-outline-variant text-on-surface py-3 rounded-xl font-bold hover:bg-surface-container-highest transition-colors"
               >
-                إغلاق
+                إغلاق والبقاء هنا
               </button>
             </div>
           </div>
