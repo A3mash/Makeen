@@ -6,6 +6,12 @@ import { splitTextIntoChunks } from '../utils/textSplitter';
 import { generateQuizFromText, generateMaterialMetadata } from '../services/aiService';
 import { useNavigate } from 'react-router-dom';
 
+const getErrorMessage = (error: unknown) =>
+  error instanceof Error ? error.message : String(error);
+
+const isBlockedAiContentError = (error: unknown) =>
+  getErrorMessage(error).includes('PROHIBITED_CONTENT');
+
 export default function MaterialUploadHub() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -64,6 +70,7 @@ export default function MaterialUploadHub() {
       setUploadProgress({ current: 0, total: chunks.length });
       
       let allQuestions: Question[] = [];
+      let blockedChunkCount = 0;
 
       for (let i = 0; i < chunks.length; i++) {
          if (i > 0) {
@@ -73,8 +80,17 @@ export default function MaterialUploadHub() {
          const chunk = chunks[i];
          if (chunk.trim().length > 50) {
            setUploadStatus(`جاري تحليل الجزء ${i + 1} من ${chunks.length}...`);
-           const generatedQs = await generateQuizFromText(chunk, newMaterial.id);
-           allQuestions = [...allQuestions, ...generatedQs];
+           try {
+             const generatedQs = await generateQuizFromText(chunk, newMaterial.id);
+             allQuestions = [...allQuestions, ...generatedQs];
+           } catch (error) {
+             if (isBlockedAiContentError(error)) {
+               blockedChunkCount += 1;
+               console.warn('Skipped a chunk blocked by the AI safety policy.', error);
+             } else {
+               throw error;
+             }
+           }
          }
          setUploadProgress({ current: i + 1, total: chunks.length });
       }
@@ -94,13 +110,15 @@ export default function MaterialUploadHub() {
 
       setMaterials(prev => [newMaterial, ...prev]);
       setToastNotification({
-        message: `تم إضافة المادة "${newMaterial.title}" في مجلد "${newMaterial.topic}" بنجاح وتوليد ${allQuestions.length} سؤال.`,
+        message: blockedChunkCount > 0
+          ? `تمت إضافة المادة "${newMaterial.title}" وتوليد ${allQuestions.length} سؤال. تعذر توليد أسئلة من ${blockedChunkCount} جزء بسبب سياسة أمان الذكاء الاصطناعي.`
+          : `تم إضافة المادة "${newMaterial.title}" في مجلد "${newMaterial.topic}" بنجاح وتوليد ${allQuestions.length} سؤال.`,
         materialId: newMaterial.id
       });
       setPastedText('');
-    } catch (error: any) {
+    } catch (error) {
       console.error("Upload Error:", error);
-      alert(`حدث خطأ أثناء رفع وتحليل المادة: ${error.message || error}`);
+      alert(`حدث خطأ أثناء رفع وتحليل المادة: ${getErrorMessage(error)}`);
     } finally {
       setIsUploading(false);
       setUploadStatus('');
@@ -129,9 +147,9 @@ export default function MaterialUploadHub() {
 
       const textContent = await extractTextFromFile(file);
       await processText(textContent, file.name, file.name, type, file);
-    } catch (error: any) {
+    } catch (error) {
       console.error("Extraction error:", error);
-      alert(`حدث خطأ أثناء قراءة الملف: ${error.message || error}`);
+      alert(`حدث خطأ أثناء قراءة الملف: ${getErrorMessage(error)}`);
       setIsUploading(false);
       setUploadStatus('');
     }
