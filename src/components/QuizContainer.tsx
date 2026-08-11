@@ -201,12 +201,12 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
             <div className="bg-surface-container-low p-4 rounded-xl">
               <span className="material-symbols-outlined text-primary mb-1">timer</span>
               <p className="text-label-sm text-on-surface-variant">وقت الدراسة</p>
-              <p className="font-bold text-title-md text-on-surface" dir="ltr">{formatStudyTime(sessionStats.timeSpentSeconds)}</p>
+              <p className="font-bold text-title-md text-on-surface">{formatStudyTime(sessionStats.timeSpentSeconds)}</p>
             </div>
             <div className="bg-surface-container-low p-4 rounded-xl">
               <span className="material-symbols-outlined text-primary mb-1">check_circle</span>
               <p className="text-label-sm text-on-surface-variant">دقة الإجابات</p>
-              <p className="font-bold text-title-md text-on-surface" dir="ltr">{accuracy}%</p>
+              <p className="font-bold text-title-md text-on-surface">{accuracy}٪</p>
             </div>
             <div className="bg-surface-container-low p-4 rounded-xl">
               <span className="material-symbols-outlined text-tertiary mb-1">quiz</span>

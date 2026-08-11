@@ -155,7 +155,7 @@ export default function ActivityHeatmap() {
                   <span className="material-symbols-outlined text-primary">timer</span>
                   <span className="text-on-surface font-medium">وقت الدراسة</span>
                 </div>
-                <span className="font-bold text-title-md" dir="ltr">{formatStudyTime(selectedDay.studyTimeSeconds)}</span>
+                <span className="font-bold text-title-md">{formatStudyTime(selectedDay.studyTimeSeconds)}</span>
               </div>
             </div>
             
