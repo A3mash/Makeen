@@ -62,8 +62,9 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           
           {/* Progress Summary (Spans 8 cols) */}
-          <div className="md:col-span-8 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)]">
-            <div className="w-full overflow-x-auto pb-4">
+          <div className="md:col-span-8 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)] flex flex-col items-center">
+            <h3 className="text-title-md font-bold text-on-surface w-full mb-4">نشاطك الدراسي</h3>
+            <div className="w-full overflow-x-auto pb-4 flex justify-center">
               <ActivityHeatmap />
             </div>
           </div>
@@ -100,16 +101,16 @@ export default function Dashboard() {
             </div>
             
             {/* Stats Card */}
-            <div className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant flex flex-col justify-center shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)]">
-              <h4 className="text-body-md text-on-surface-variant mb-2 font-bold">حصيلة دراستك</h4>
-              <div className="flex items-center gap-8 mt-2">
-                <div>
-                  <span className="text-[32px] font-bold text-on-surface leading-none block">{totalMaterials}</span>
-                  <span className="text-label-md text-on-surface-variant">مادة</span>
+            <div className="bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant flex flex-col justify-center items-center shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)]">
+              <h4 className="text-body-md text-on-surface-variant mb-4 font-bold">حصيلة دراستك</h4>
+              <div className="flex items-center justify-around w-full gap-4">
+                <div className="text-center">
+                  <span className="text-[36px] font-bold text-primary leading-none block mb-1">{totalMaterials}</span>
+                  <span className="text-label-md text-on-surface-variant">مادة دراسية</span>
                 </div>
-                <div className="w-px h-10 bg-outline-variant/50"></div>
-                <div>
-                  <span className="text-[32px] font-bold text-on-surface leading-none block">{totalQuestions}</span>
+                <div className="w-px h-12 bg-outline-variant/30"></div>
+                <div className="text-center">
+                  <span className="text-[36px] font-bold text-tertiary leading-none block mb-1">{totalQuestions}</span>
                   <span className="text-label-md text-on-surface-variant">سؤال متاح</span>
                 </div>
               </div>
@@ -117,24 +118,30 @@ export default function Dashboard() {
           </div>
 
           {/* Action Cards */}
-          <div className="md:col-span-6 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)] flex items-center justify-between hover:border-primary transition-colors group cursor-pointer" onClick={() => window.location.href = '/review'}>
-            <div>
-              <h3 className="text-title-md font-bold text-on-surface group-hover:text-primary transition-colors">مراجعة شاملة</h3>
-              <p className="text-on-surface-variant text-sm mt-1">ابدأ جلسة مراجعة لموادك</p>
+          <div className="md:col-span-6 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)] flex items-center justify-between hover:border-primary hover:shadow-md transition-all group cursor-pointer" onClick={() => window.location.href = '/review'}>
+            <div className="flex items-center gap-4">
+              <div className="bg-primary-fixed text-primary p-4 rounded-xl group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[28px]">play_arrow</span>
+              </div>
+              <div>
+                <h3 className="text-title-md font-bold text-on-surface group-hover:text-primary transition-colors">مراجعة شاملة</h3>
+                <p className="text-on-surface-variant text-sm mt-1">ابدأ جلسة مراجعة لموادك</p>
+              </div>
             </div>
-            <div className="bg-primary-fixed text-primary p-3 rounded-xl group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">play_arrow</span>
-            </div>
+            <span className="material-symbols-outlined text-outline-variant rtl:rotate-180 group-hover:text-primary transition-colors">arrow_forward_ios</span>
           </div>
 
-          <div className="md:col-span-6 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)] flex items-center justify-between hover:border-error transition-colors group cursor-pointer" onClick={() => window.location.href = '/challenge'}>
-            <div>
-              <h3 className="text-title-md font-bold text-on-surface group-hover:text-error transition-colors">تحدي الفجوات</h3>
-              <p className="text-on-surface-variant text-sm mt-1">عالج نقاط الضعف والفجوات</p>
+          <div className="md:col-span-6 bg-surface-container-lowest rounded-2xl p-6 border border-surface-variant shadow-[0_10px_40px_-10px_rgba(0,32,69,0.08)] flex items-center justify-between hover:border-error hover:shadow-md transition-all group cursor-pointer" onClick={() => window.location.href = '/challenge'}>
+            <div className="flex items-center gap-4">
+              <div className="bg-error-container text-error p-4 rounded-xl group-hover:scale-110 transition-transform">
+                <span className="material-symbols-outlined text-[28px]">psychology</span>
+              </div>
+              <div>
+                <h3 className="text-title-md font-bold text-on-surface group-hover:text-error transition-colors">تحدي الفجوات</h3>
+                <p className="text-on-surface-variant text-sm mt-1">عالج نقاط الضعف والفجوات</p>
+              </div>
             </div>
-            <div className="bg-error-container text-error p-3 rounded-xl group-hover:scale-110 transition-transform">
-              <span className="material-symbols-outlined">psychology</span>
-            </div>
+            <span className="material-symbols-outlined text-outline-variant rtl:rotate-180 group-hover:text-error transition-colors">arrow_forward_ios</span>
           </div>
 
         </div>
