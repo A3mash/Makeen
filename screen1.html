@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="light" dir="rtl" lang="ar"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Zenith Study - Material Upload Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-fixed-dim": "#ffb4a3",
+                      "on-tertiary": "#ffffff",
+                      "inverse-on-surface": "#f3f0ef",
+                      "primary-fixed": "#dae2ff",
+                      "surface-dim": "#dcd9d9",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#b2c5ff",
+                      "on-secondary-fixed": "#3d0600",
+                      "background": "#fcf9f8",
+                      "on-secondary-fixed-variant": "#8b1a00",
+                      "outline": "#737785",
+                      "surface-tint": "#0056d2",
+                      "surface-variant": "#e5e2e1",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed-dim": "#ffb59b",
+                      "on-tertiary-container": "#ffcebd",
+                      "on-surface": "#1b1b1c",
+                      "on-error": "#ffffff",
+                      "surface": "#fcf9f8",
+                      "surface-container-low": "#f6f3f2",
+                      "on-primary-fixed": "#001847",
+                      "inverse-primary": "#b2c5ff",
+                      "tertiary": "#822800",
+                      "on-tertiary-fixed": "#380d00",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#ffdad2",
+                      "secondary": "#b42907",
+                      "surface-container-highest": "#e5e2e1",
+                      "outline-variant": "#c3c6d6",
+                      "surface-bright": "#fcf9f8",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface-variant": "#424654",
+                      "on-tertiary-fixed-variant": "#812800",
+                      "on-background": "#1b1b1c",
+                      "surface-container": "#f0eded",
+                      "tertiary-container": "#a93802",
+                      "on-secondary-container": "#5b0d00",
+                      "on-primary-container": "#ccd8ff",
+                      "surface-container-high": "#eae7e7",
+                      "tertiary-fixed": "#ffdbcf",
+                      "primary-container": "#0056d2",
+                      "secondary-container": "#fe5d39",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#303030",
+                      "on-error-container": "#93000a",
+                      "on-primary-fixed-variant": "#0040a1",
+                      "primary": "#0040a1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "section-gap": "80px",
+                      "margin-desktop": "64px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "margin-mobile": "20px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "title-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "title-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.01em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #fcf9f8;
+            color: #1b1b1c;
+        }
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+    
+    @keyframes slideUpFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-entrance {
+        animation: slideUpFadeIn 0.5s ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .animate-entrance {
+            animation: none;
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen font-body-md text-body-md text-on-background bg-background pb-20">
+<!-- Top App Bar (Mobile adapted) -->
+<header class="bg-white/80 dark:bg-on-background/80 backdrop-blur-md shadow-sm dark:shadow-none docked full-width top-0 sticky z-40 flex justify-between items-center h-16 px-gutter max-w-[1200px] mx-auto w-full">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md font-bold text-on-surface dark:text-inverse-on-surface">Zenith Study</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button aria-label="بحث" class="hover:text-primary transition-all p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="الإشعارات" class="hover:text-primary transition-all p-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="إعدادات الحساب" class="hover:text-primary transition-all">
+<img alt="ملف المستخدم" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A small, circular avatar portrait of a young professional in a light-filled academic environment, representing a user profile picture in a premium study app." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRjoHMcb76hj_mnyfBuIiimwLRoMScijle0BOAxlsZUDYz289Pj2Az52H6chyb0C81O4uKyygk29mjKgwWF7eZM_Jd24vJNOg_MrenxXCOsDoNwvBTd0npJpKIVWlphWUbkfKOoxxUv-_2n9f0KC3H81t7WoIVFvv82X9OQJ9daU4-oEXB_45f2YYkI1uAVD0vNisQj_RPJSSCVpFb9rUAExioQW0q0O_tiQBxZOQ3sfT3hZDFUsbY"/>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-margin-mobile pt-6 flex flex-col gap-8 w-full max-w-md mx-auto animate-entrance">
+<!-- Header -->
+<section>
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">المواد</h1>
+<p class="text-on-surface-variant mt-2 font-body-md">ارفع وإدار مصادرك الدراسية.</p>
+</section>
+<!-- Upload Area (Mobile Tap to Select) -->
+<section class="bg-surface-container-low rounded-xl border border-dashed border-outline-variant p-8 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-surface-container-high cursor-pointer shadow-sm">
+<div class="w-16 h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-[0px_4px_20px_rgba(0,0,0,0.04)]">
+<span class="material-symbols-outlined text-3xl" data-icon="cloud_upload">cloud_upload</span>
+</div>
+<div>
+<h3 class="font-title-md text-title-md text-on-surface mb-1">اضغط للرفع</h3>
+<p class="text-on-surface-variant font-label-md text-label-md">يدعم PDF, DOCX, TXT, MP4 (كحد أقصى 50MB)</p>
+</div>
+<div class="flex gap-4 mt-2">
+<button class="bg-surface text-primary border border-outline-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined" data-icon="description">description</span> مستند
+                </button>
+<button class="bg-surface text-primary border border-outline-variant px-4 py-2 rounded-full font-label-md text-label-md flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span> وسائط
+                </button>
+</div>
+</section>
+<!-- Recent Materials List -->
+<section class="flex flex-col gap-4">
+<div class="flex justify-between items-end mb-2">
+<h2 class="font-title-md text-title-md text-on-surface">المواد الحديثة</h2>
+<button class="text-primary font-label-md text-label-md hover:underline">عرض الكل</button>
+</div>
+<!-- Material Item: Processing -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 relative overflow-hidden group">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/20 text-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-title-md text-[16px] text-on-surface truncate">Advanced Cellular Biology_Ch4.pdf</h4>
+<p class="text-on-surface-variant font-label-sm text-label-sm mt-1">تمت الإضافة منذ دقيقتين</p>
+</div>
+<div class="shrink-0 flex items-center gap-2">
+<span class="bg-secondary-fixed text-on-secondary-fixed px-2 py-1 rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="sync" style="animation: spin 2s linear infinite;">sync</span> جاري التحليل
+                    </span>
+<button aria-label="خيارات إضافية" class="text-on-surface-variant p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- Progress bar overlay for processing -->
+<div class="absolute bottom-0 right-0 h-1 bg-secondary-fixed w-full">
+<div class="h-full bg-secondary-container w-[65%] rounded-l"></div>
+</div>
+</article>
+<!-- Material Item: Ready (Video) -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 group cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/20 text-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-title-md text-[16px] text-on-surface truncate">Lecture 12: Quantum Mechanics</h4>
+<p class="text-on-surface-variant font-label-sm text-label-sm mt-1">تمت الإضافة أمس • 45 دقيقة</p>
+</div>
+<div class="shrink-0 flex items-center gap-2">
+<span class="bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded font-label-sm text-label-sm">جاهز</span>
+<button aria-label="خيارات إضافية" class="text-on-surface-variant p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</article>
+<!-- Material Item: Ready (Text) -->
+<article class="bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] flex items-center gap-4 group cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="w-12 h-12 rounded-lg bg-surface-variant text-on-surface-variant flex items-center justify-center shrink-0 border border-outline-variant">
+<span class="material-symbols-outlined" data-icon="article">article</span>
+</div>
+<div class="flex-grow min-w-0">
+<h4 class="font-title-md text-[16px] text-on-surface truncate">Research Notes - Cognitive Psych</h4>
+<p class="text-on-surface-variant font-label-sm text-label-sm mt-1">تمت الإضافة في 24 أكتوبر • 12 كيلوبايت</p>
+</div>
+<div class="shrink-0 flex items-center gap-2">
+<span class="bg-primary-fixed text-on-primary-fixed px-2 py-1 rounded font-label-sm text-label-sm">جاهز</span>
+<button aria-label="خيارات إضافية" class="text-on-surface-variant p-1 rounded-full hover:bg-surface-container-high">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</article>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface shadow-[0px_-4px_20px_rgba(0,0,0,0.04)] z-50 flex justify-around items-center h-20 px-4 pb-safe">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant p-2 w-16" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-sm text-[10px]">نظرة عامة</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary font-bold p-2 w-16 relative" href="#">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-8 h-1 bg-primary rounded-b-full"></div>
+<span class="material-symbols-outlined" data-icon="folder_open" data-weight="fill" style="font-variation-settings: 'FILL' 1;">folder_open</span>
+<span class="font-label-sm text-[10px]">المواد</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant p-2 w-16" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+<span class="font-label-sm text-[10px]">بطاقات تعليمية</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant p-2 w-16" href="#">
+<span class="material-symbols-outlined" data-icon="timer">timer</span>
+<span class="font-label-sm text-[10px]">المؤقت</span>
+</a>
+</nav>
+<style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(-360deg);
+            }
+        }
+        /* Safe area padding for newer mobile devices */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            .pb-safe {
+                padding-bottom: calc(env(safe-area-inset-bottom) + 0.5rem);
+            }
+        }
+    </style>
+</body></html>
