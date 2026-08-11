@@ -1,3 +1,4 @@
+// @ts-ignore
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf';
 
 // Use a bundler-friendly worker URL so Vite/webpack resolve the asset correctly
