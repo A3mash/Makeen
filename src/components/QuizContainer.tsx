@@ -315,17 +315,17 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
           </div>
         )}
 
-        {/* Next Button Spacer to push button to bottom or just margin */}
-        <div className="mt-8 flex-1 flex flex-col justify-end">
-          {selectedOption && (
+        {/* Fixed Bottom Action Area */}
+        {selectedOption && (
+          <div className="sticky bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-md pt-4 pb-2 mt-8 -mx-6 px-6 md:-mx-12 md:px-12">
             <button
               onClick={handleNext}
-              className="bg-primary text-on-primary font-bold py-4 rounded-xl shadow-md hover:bg-primary/90 transition-colors w-full animate-entrance active:scale-[0.98]"
+              className="bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg hover:bg-primary/90 transition-all w-full animate-entrance active:scale-[0.98]"
             >
               {currentIndex < questions.length - 1 ? 'متابعة' : 'إنهاء الاختبار'}
             </button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Exit Warning Modal */}
