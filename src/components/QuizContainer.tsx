@@ -261,7 +261,8 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto w-full px-4 flex-1 pb-12 flex flex-col">
+      {/* Scrollable Content */}
+      <div className="max-w-3xl mx-auto w-full flex-1 overflow-y-auto px-4 pt-4 pb-48 custom-scrollbar flex flex-col relative">
         {/* Question Card */}
         <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant flex flex-col gap-6 relative flex-shrink-0">
           <h2 className="text-title-md md:text-headline-md font-bold leading-relaxed text-on-surface">
@@ -315,9 +316,12 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
           </div>
         )}
 
-        {/* Fixed Bottom Action Area */}
-        {selectedOption && (
-          <div className="sticky bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-md pt-4 pb-2 mt-8 -mx-6 px-6 md:-mx-12 md:px-12">
+      </div>
+
+      {/* Fixed Bottom Action Area (OUTSIDE scroll container) */}
+      {selectedOption && (
+        <div className="absolute bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-md p-4 md:p-6 border-t border-outline-variant/30 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-20 flex justify-center">
+          <div className="max-w-3xl w-full px-4">
             <button
               onClick={handleNext}
               className="bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg hover:bg-primary/90 transition-all w-full animate-entrance active:scale-[0.98]"
@@ -325,8 +329,8 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
               {currentIndex < questions.length - 1 ? 'متابعة' : 'إنهاء الاختبار'}
             </button>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Exit Warning Modal */}
       {showExitModal && (
