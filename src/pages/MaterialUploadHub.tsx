@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { saveMaterial, getMaterials, bulkSaveQuestions, deleteMaterialData } from '../services/db';
+import { getMaterials, saveMaterial, deleteMaterialData, bulkSaveQuestions, saveMaterialFile } from '../services/db';
 import type { Material, Question } from '../services/db';
 import { extractTextFromFile } from '../utils/fileExtractor';
 import { splitTextIntoChunks } from '../utils/textSplitter';
@@ -41,7 +41,7 @@ export default function MaterialUploadHub() {
     fileInputRef.current?.click();
   };
 
-  const processText = async (text: string, originalName: string, source: string, type: 'PDF' | 'YouTube' | 'PPT' | 'Text') => {
+  const processText = async (text: string, originalName: string, source: string, type: 'PDF' | 'YouTube' | 'PPT' | 'Text', originalFile?: File) => {
     setIsUploading(true);
     setUploadProgress(null);
     try {
@@ -83,6 +83,11 @@ export default function MaterialUploadHub() {
       setUploadProgress(null);
       await saveMaterial(newMaterial);
       
+      if (originalFile && type === 'PDF') {
+        // We import saveMaterialFile dynamically or add it to the top imports
+        await saveMaterialFile(newMaterial.id, originalFile);
+      }
+      
       if (allQuestions.length > 0) {
         await bulkSaveQuestions(allQuestions);
       }
@@ -123,7 +128,7 @@ export default function MaterialUploadHub() {
       if (file.name.endsWith('.pdf')) type = 'PDF';
 
       const textContent = await extractTextFromFile(file);
-      await processText(textContent, file.name, file.name, type);
+      await processText(textContent, file.name, file.name, type, file);
     } catch (error: any) {
       console.error("Extraction error:", error);
       alert(`حدث خطأ أثناء قراءة الملف: ${error.message || error}`);

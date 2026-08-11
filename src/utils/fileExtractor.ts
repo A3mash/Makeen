@@ -20,7 +20,9 @@ export async function extractTextFromFile(file: File): Promise<string> {
         const pageText = textContent.items
           .map((item: any) => (item && (item.str ?? item.toString())) || '')
           .join(' ');
-        fullText += pageText + '\n';
+        
+        // Inject a very clear page marker for the AI to find
+        fullText += `\n\n[الصفحة ${i}]\n${pageText}\n`;
       }
 
       if (!fullText.trim()) {

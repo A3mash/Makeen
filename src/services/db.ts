@@ -77,11 +77,15 @@ export interface StudyCompanionDB extends DBSchema {
   settings: {
     key: string;
     value: AppSetting;
-  }
+  };
+  material_files: {
+    key: string;
+    value: Blob; // To store the original file
+  };
 }
 
 const DB_NAME = 'StudyCompanionDB';
-const DB_VERSION = 4;
+const DB_VERSION = 5;
 
 export async function initDB(): Promise<IDBPDatabase<StudyCompanionDB>> {
   return await openDB<StudyCompanionDB>(DB_NAME, DB_VERSION, {
@@ -98,7 +102,11 @@ export async function initDB(): Promise<IDBPDatabase<StudyCompanionDB>> {
         srsStore.createIndex('by-nextReviewDate', 'nextReviewDate');
         srsStore.createIndex('by-questionId', 'questionId');
       } else {
+        // Migration for nextReviewDate index if missing
         const srsStore = transaction.objectStore('srs_cards');
+        if (!srsStore.indexNames.contains('by-nextReviewDate')) {
+          srsStore.createIndex('by-nextReviewDate', 'nextReviewDate');
+        }
         if (!srsStore.indexNames.contains('by-questionId')) {
           srsStore.createIndex('by-questionId', 'questionId');
         }
@@ -111,6 +119,10 @@ export async function initDB(): Promise<IDBPDatabase<StudyCompanionDB>> {
       }
       if (!db.objectStoreNames.contains('settings')) {
         db.createObjectStore('settings', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('material_files')) {
+        // We use out-of-line keys (the materialId) instead of a keyPath
+        db.createObjectStore('material_files');
       }
     },
   });
@@ -125,12 +137,14 @@ export async function saveMaterial(material: Material): Promise<void> {
   await db.put('materials', material);
 }
 
-export async function deleteMaterialData(materialId: string): Promise<void> {
+export async function deleteMaterialData(materialId: string) {
   const db = await initDB();
-  // 1. Delete material
-  await db.delete('materials', materialId);
+  const tx = db.transaction(['materials', 'questions', 'srs_cards', 'material_files'], 'readwrite');
   
-  // 2. Delete all its questions and associated SRS/gaps
+  await tx.objectStore('materials').delete(materialId);
+  await tx.objectStore('material_files').delete(materialId).catch(() => {}); // Optional catch in case it doesn't exist
+  
+  // Find and delete all questions for this material, including associated SRS/gaps
   const questions = await getQuestionsByMaterial(materialId);
   for (const q of questions) {
     await deleteQuestion(q.id);
@@ -142,6 +156,19 @@ export async function getMaterials(): Promise<Material[]> {
   return await db.getAll('materials');
 }
 
+export async function saveMaterialFile(materialId: string, fileBlob: Blob) {
+  const db = await initDB();
+  await db.put('material_files', fileBlob, materialId);
+}
+
+export async function getMaterialFile(materialId: string): Promise<Blob | undefined> {
+  const db = await initDB();
+  return await db.get('material_files', materialId);
+}
+
+// ========================
+// Questions
+// ========================
 export async function bulkSaveQuestions(questions: Question[]): Promise<void> {
   const db = await initDB();
   const tx = db.transaction('questions', 'readwrite');

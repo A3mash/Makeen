@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { updateSRSCard, saveLearningGap, getLearningGap, getSRSCardByQuestionId, logActivity, getSetting } from '../services/db';
+import { updateSRSCard, saveLearningGap, getLearningGap, getSRSCardByQuestionId, logActivity, getSetting, getMaterialFile } from '../services/db';
 import type { Question } from '../services/db';
 import { calculateNextReview } from '../utils/srsEngine';
 
@@ -27,10 +27,14 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
     gapsDiscovered: 0
   });
 
-  // Queued Updates (saved only on complete or explicitly)
   const [pendingSrsUpdates, setPendingSrsUpdates] = useState<any[]>([]);
   const [pendingGapUpdates, setPendingGapUpdates] = useState<any[]>([]);
   const [pendingActivityLog, setPendingActivityLog] = useState(0);
+
+  // PDF Viewer State
+  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [showPdf, setShowPdf] = useState(false);
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
 
   useEffect(() => {
     async function loadSettings() {
@@ -234,8 +238,45 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
   const currentQuestion = questions[currentIndex];
   const isCorrect = selectedOption === currentQuestion.correctAnswer;
 
+  const handleReferenceClick = async () => {
+    if (!currentQuestion.materialId) return;
+    
+    if (!pdfUrl) {
+      setIsPdfLoading(true);
+      setShowPdf(true);
+      try {
+        const fileBlob = await getMaterialFile(currentQuestion.materialId);
+        if (fileBlob) {
+          const url = URL.createObjectURL(fileBlob);
+          setPdfUrl(url);
+        } else {
+          alert('تعذر العثور على الملف الأصلي. يبدو أنه تم رفع هذه المادة قبل تفعيل ميزة حفظ الملفات الأصلية.');
+          setShowPdf(false);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء فتح الملف.');
+        setShowPdf(false);
+      } finally {
+        setIsPdfLoading(false);
+      }
+    } else {
+      setShowPdf(true);
+    }
+  };
+
+  // Cleanup object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+    };
+  }, [pdfUrl]);
+
   return (
-    <div className="flex flex-col h-full bg-background font-body-md text-on-background w-full animate-entrance">
+    <div className="flex h-full bg-background font-body-md text-on-background w-full animate-entrance overflow-hidden">
+      
+      {/* Quiz Area */}
+      <div className={`flex flex-col h-full transition-all duration-300 relative ${showPdf ? 'w-full lg:w-1/2 border-l border-outline-variant/30 hidden lg:flex' : 'w-full'}`}>
       
       {/* Internal Header for Quiz */}
       <header className="bg-surface-container-lowest/80 backdrop-blur-md shadow-sm sticky top-0 z-40 px-4 py-3 flex items-center justify-between border-b border-outline-variant/30 mb-6">
@@ -270,10 +311,15 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
           </h2>
           
           {currentQuestion.reference?.pageNumber && (
-            <div className="flex items-center gap-1 text-primary font-label-sm bg-primary-fixed/30 w-fit px-3 py-1.5 rounded-lg border border-primary/20">
-              <span className="material-symbols-outlined text-[16px]">menu_book</span>
+            <button 
+              onClick={handleReferenceClick}
+              className="flex items-center gap-1 text-primary font-label-sm bg-primary-fixed/30 w-fit px-3 py-1.5 rounded-lg border border-primary/20 hover:bg-primary-fixed hover:text-on-primary-fixed transition-colors cursor-pointer group"
+              title="انقر لفتح المرجع"
+            >
+              <span className="material-symbols-outlined text-[16px] group-hover:scale-110 transition-transform">menu_book</span>
               <span>المرجع: صفحة {currentQuestion.reference.pageNumber}</span>
-            </div>
+              <span className="material-symbols-outlined text-[14px] opacity-0 group-hover:opacity-100 mr-1">open_in_new</span>
+            </button>
           )}
 
           <div className="flex flex-col gap-3 mt-2">
@@ -318,16 +364,50 @@ export default function QuizContainer({ initialQuestions, onComplete, onExit }: 
 
       </div>
 
-      {/* Fixed Bottom Action Area (OUTSIDE scroll container) */}
-      {selectedOption && (
-        <div className="absolute bottom-0 left-0 right-0 bg-surface/95 backdrop-blur-md p-4 md:p-6 border-t border-outline-variant/30 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] z-20 flex justify-center">
-          <div className="max-w-3xl w-full px-4">
+        {/* Fixed Bottom Bar: Next Button */}
+        {selectedOption && (
+          <div className={`absolute bottom-0 right-0 p-4 border-t border-outline-variant/30 bg-surface-container-lowest/80 backdrop-blur-md z-30 transition-all duration-300 ${showPdf ? 'w-full' : 'w-full lg:w-[768px] lg:left-1/2 lg:-translate-x-1/2 lg:right-auto'}`}>
             <button
               onClick={handleNext}
-              className="bg-primary text-on-primary font-bold py-4 rounded-xl shadow-lg hover:bg-primary/90 transition-all w-full animate-entrance active:scale-[0.98]"
+              className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-sm text-lg flex items-center justify-center gap-2"
             >
-              {currentIndex < questions.length - 1 ? 'متابعة' : 'إنهاء الاختبار'}
+              <span>{currentIndex < questions.length - 1 ? 'السؤال التالي' : 'إنهاء الاختبار'}</span>
+              <span className="material-symbols-outlined rtl:rotate-180">arrow_forward</span>
             </button>
+          </div>
+        )}
+      </div>
+
+      {/* PDF Viewer Area (Left side in RTL layout) */}
+      {showPdf && (
+        <div className="w-full lg:w-1/2 h-full bg-surface-container-lowest flex flex-col z-50 absolute lg:relative inset-0">
+          <div className="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-container-low/80 backdrop-blur-md shadow-sm">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary">picture_as_pdf</span>
+              <span className="font-bold text-title-md">المستند المرجعي</span>
+              <span className="text-sm bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-md mr-2">صفحة {currentQuestion.reference?.pageNumber}</span>
+            </div>
+            <button 
+              onClick={() => setShowPdf(false)} 
+              className="p-2 rounded-full hover:bg-black/5 active:bg-black/10 transition-colors flex items-center justify-center text-on-surface-variant hover:text-error"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          </div>
+          
+          <div className="flex-1 w-full relative bg-surface-container">
+            {isPdfLoading ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-on-surface-variant gap-4">
+                <span className="material-symbols-outlined animate-spin text-4xl text-primary">progress_activity</span>
+                <p className="font-medium">جاري تحميل المستند...</p>
+              </div>
+            ) : pdfUrl ? (
+              <iframe 
+                src={`${pdfUrl}#page=${currentQuestion.reference?.pageNumber || 1}`} 
+                className="w-full h-full border-0"
+                title="مستند المرجع"
+              />
+            ) : null}
           </div>
         </div>
       )}
