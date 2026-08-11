@@ -41,7 +41,7 @@ export default function MaterialUploadHub() {
     fileInputRef.current?.click();
   };
 
-  const processText = async (text: string, originalName: string, source: string, type: 'PDF' | 'YouTube' | 'PPT') => {
+  const processText = async (text: string, originalName: string, source: string, type: 'PDF' | 'YouTube' | 'PPT' | 'Text') => {
     setIsUploading(true);
     setUploadProgress(null);
     try {
@@ -90,7 +90,7 @@ export default function MaterialUploadHub() {
         message: `تم إضافة المادة "${newMaterial.title}" في مجلد "${newMaterial.topic}" بنجاح وتوليد ${allQuestions.length} سؤال.`,
         materialId: newMaterial.id
       });
-      setYoutubeLink('');
+      setPastedText('');
     } catch (error: any) {
       console.error("Upload Error:", error);
       alert(`حدث خطأ أثناء رفع وتحليل المادة: ${error.message || error}`);
