@@ -82,10 +82,7 @@ export default function ActivityHeatmap() {
   };
 
   return (
-    <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant relative">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="font-title-md text-on-surface font-bold">نشاطك الدراسي</h3>
-      </div>
+    <div className="relative w-full">
       
       <div className="overflow-x-auto w-full custom-scrollbar pb-4">
         <div className="w-max">
