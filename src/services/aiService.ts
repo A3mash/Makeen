@@ -9,6 +9,30 @@ if (!apiKey || apiKey.trim() === '' || apiKey === 'your_api_key_here') {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+async function executeWithRetry<T>(apiCall: () => Promise<T>, maxRetries = 3): Promise<T> {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await apiCall();
+    } catch (error: any) {
+      const isRateLimit = error.status === 429 || 
+                          error.message?.includes('429') || 
+                          error.message?.includes('Quota') ||
+                          error.message?.includes('exceeded');
+                          
+      if (isRateLimit && i < maxRetries - 1) {
+        const delay = 15000 * (i + 1); // Wait 15s, then 30s...
+        console.warn(`Rate limit hit (429). Waiting ${delay/1000}s before retrying (Attempt ${i + 1}/${maxRetries})...`);
+        await sleep(delay);
+      } else {
+        throw error;
+      }
+    }
+  }
+  throw new Error("Maximum retries exceeded");
+}
+
 // Schema to enforce JSON structure from Gemini
 export const questionSchemaDescription = `
 [
@@ -47,7 +71,7 @@ ${chunkedText}
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await executeWithRetry(() => model.generateContent(prompt));
     let responseText = result.response.text();
     
     // Strip markdown JSON blocks if present
@@ -120,7 +144,7 @@ ${remediationSchemaDescription}
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await executeWithRetry(() => model.generateContent(prompt));
     let responseText = result.response.text();
     responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
     return JSON.parse(responseText) as RemediationResult;
@@ -151,7 +175,7 @@ ${textChunk.substring(0, 1000)}
   `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const result = await executeWithRetry(() => model.generateContent(prompt));
     let responseText = result.response.text();
     responseText = responseText.replace(/```json\n?|\n?```/g, '').trim();
     return JSON.parse(responseText);

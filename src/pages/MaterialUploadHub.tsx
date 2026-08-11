@@ -64,15 +64,17 @@ export default function MaterialUploadHub() {
       setUploadProgress({ current: 0, total: chunks.length });
       
       let allQuestions: Question[] = [];
-      const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
       for (let i = 0; i < chunks.length; i++) {
+         if (i > 0) {
+           await new Promise(r => setTimeout(r, 4000)); // 4-second delay to respect 15 RPM limit
+         }
+         
          const chunk = chunks[i];
          if (chunk.trim().length > 50) {
+           setUploadStatus(`جاري تحليل الجزء ${i + 1} من ${chunks.length}...`);
            const generatedQs = await generateQuizFromText(chunk, newMaterial.id);
            allQuestions = [...allQuestions, ...generatedQs];
-           // Delay to prevent HTTP 429 Too Many Requests
-           await sleep(2500);
          }
          setUploadProgress({ current: i + 1, total: chunks.length });
       }
