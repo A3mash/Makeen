@@ -35,11 +35,7 @@ export async function extractTextFromFile(file: File): Promise<string> {
       if (typeof result === 'string') {
         resolve(result);
       } else {
-        if (file.name.endsWith('.ppt') || file.name.endsWith('.pptx')) {
-          resolve("هذا نص توضيحي يمثل محتوى مستخرج من ملف عرض تقديمي (PPT). في الإنتاج، سيتم استخدام مكتبات قراءة العروض التقديمية.");
-        } else {
-          resolve("محتوى غير مدعوم أو فارغ.");
-        }
+        resolve("محتوى غير مدعوم أو فارغ.");
       }
     };
     
@@ -48,7 +44,7 @@ export async function extractTextFromFile(file: File): Promise<string> {
       reject(new Error("حدث خطأ أثناء قراءة الملف."));
     };
 
-    if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+    if (file.type === 'text/plain' || file.name.match(/\.(txt|md|csv|json)$/i)) {
       reader.readAsText(file);
     } else {
       reader.readAsArrayBuffer(file);

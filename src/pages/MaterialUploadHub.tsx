@@ -12,7 +12,7 @@ export default function MaterialUploadHub() {
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [uploadProgress, setUploadProgress] = useState<{ current: number; total: number } | null>(null);
   const [toastNotification, setToastNotification] = useState<{ message: string; materialId?: string } | null>(null);
-  const [youtubeLink, setYoutubeLink] = useState<string>('');
+  const [pastedText, setPastedText] = useState<string>('');
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -102,32 +102,11 @@ export default function MaterialUploadHub() {
     }
   };
 
-  const handleYoutubeSubmit = async (e: React.FormEvent) => {
+  const handleTextSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!youtubeLink) return;
-    setIsUploading(true);
-    setUploadStatus('جاري جلب تفريغ الفيديو من يوتيوب...');
+    if (!pastedText.trim()) return;
     
-    try {
-      const response = await fetch(`/api/youtube-transcript?url=${encodeURIComponent(youtubeLink)}`);
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'فشل جلب تفريغ الفيديو. قد لا يحتوي الفيديو على ترجمة.');
-      }
-      
-      const data = await response.json();
-      if (!data.transcript) {
-         throw new Error('لم يتم العثور على تفريغ نصي في الرد.');
-      }
-      
-      // Process the fetched transcript (splits it into chunks and generates questions)
-      await processText(data.transcript, "فيديو يوتيوب", youtubeLink, 'YouTube');
-    } catch (error: any) {
-      console.error("YouTube Fetch Error:", error);
-      alert(`حدث خطأ: ${error.message || error}`);
-      setIsUploading(false);
-      setUploadStatus('');
-    }
+    await processText(pastedText, "محتوى نصي ملصق", "نص مباشر", 'Text');
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -138,9 +117,8 @@ export default function MaterialUploadHub() {
     setUploadStatus('جاري استخراج النص...');
 
     try {
-      let type: 'PDF' | 'PPT' | 'YouTube' = 'YouTube';
+      let type: 'PDF' | 'Text' = 'Text';
       if (file.name.endsWith('.pdf')) type = 'PDF';
-      else if (file.name.endsWith('.ppt') || file.name.endsWith('.pptx')) type = 'PPT';
 
       const textContent = await extractTextFromFile(file);
       await processText(textContent, file.name, file.name, type);
@@ -168,16 +146,16 @@ export default function MaterialUploadHub() {
   const getMaterialIcon = (type: string) => {
     switch (type) {
       case 'PDF': return 'picture_as_pdf';
-      case 'PPT': return 'co_present';
-      default: return 'play_circle';
+      case 'Text': return 'notes';
+      default: return 'description';
     }
   };
 
   const getMaterialIconBg = (type: string) => {
     switch (type) {
       case 'PDF': return 'bg-secondary-container/20 text-secondary-container';
-      case 'PPT': return 'bg-tertiary-container/20 text-tertiary-container';
-      default: return 'bg-primary-container/20 text-primary-container';
+      case 'Text': return 'bg-primary-container/20 text-primary-container';
+      default: return 'bg-tertiary-container/20 text-tertiary-container';
     }
   };
 
@@ -222,7 +200,7 @@ export default function MaterialUploadHub() {
             ref={fileInputRef} 
             onChange={handleFileChange} 
             className="hidden" 
-            accept=".pdf,.ppt,.pptx" 
+            accept=".pdf,.txt,.md,.csv,.json" 
             disabled={isUploading}
           />
 
@@ -235,9 +213,9 @@ export default function MaterialUploadHub() {
           </div>
           <div className="w-full max-w-sm mx-auto">
             <h3 className="font-title-md text-title-md text-on-surface mb-1 font-bold">
-              {isUploading ? uploadStatus : 'اضغط لرفع ملف (PDF, PPT)'}
+              {isUploading ? uploadStatus : 'اضغط لرفع ملف'}
             </h3>
-            {!isUploading && <p className="text-on-surface-variant font-label-md text-label-md">الحد الأقصى 50MB</p>}
+            {!isUploading && <p className="text-on-surface-variant font-label-md text-label-md">الصيغ المدعومة لنموذج جيميناي: PDF, TXT, MD, CSV</p>}
             
             {/* Progress Bar */}
             {isUploading && uploadProgress && (
@@ -257,23 +235,22 @@ export default function MaterialUploadHub() {
           </div>
         </section>
 
-        {/* YouTube Link Input */}
-        <form onSubmit={handleYoutubeSubmit} className="flex gap-2 w-full">
-          <input
-            type="url"
-            placeholder="أو ضع رابط فيديو يوتيوب هنا..."
-            className="flex-grow bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md shadow-sm"
-            value={youtubeLink}
-            onChange={(e) => setYoutubeLink(e.target.value)}
+        {/* Text Paste Input */}
+        <form onSubmit={handleTextSubmit} className="flex flex-col gap-2 w-full">
+          <textarea
+            placeholder="أو قم بلصق أي نص هنا مباشرة (مقال، تفريغ فيديو، محتوى دراسي) مهما كان طوله..."
+            className="w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all font-body-md shadow-sm resize-y min-h-[120px]"
+            value={pastedText}
+            onChange={(e) => setPastedText(e.target.value)}
             disabled={isUploading}
             required
           />
           <button
             type="submit"
-            disabled={isUploading}
-            className="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:bg-primary-container hover:text-on-primary-container transition-colors disabled:opacity-50 shadow-sm whitespace-nowrap"
+            disabled={isUploading || !pastedText.trim()}
+            className="bg-primary text-on-primary px-6 py-3 rounded-xl font-bold hover:bg-primary-container hover:text-on-primary-container transition-colors disabled:opacity-50 shadow-sm self-end"
           >
-            إضافة الرابط
+            تحليل النص وتوليد الأسئلة
           </button>
         </form>
 

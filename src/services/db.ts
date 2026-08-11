@@ -5,7 +5,7 @@ export interface Material {
   id: string;
   title: string;
   topic?: string;
-  type: 'PDF' | 'YouTube' | 'PPT';
+  type: 'PDF' | 'YouTube' | 'PPT' | 'Text';
   source: string;
   uploadDate: number;
 }
