@@ -51,7 +51,7 @@ export default function Dashboard() {
                 هذه خطوتك الأولى لبدء التعلم الذكي. ارفع موادك الدراسية الآن وسنقوم بتنظيمها وتوليد أسئلة مخصصة لك.
               </p>
             </div>
-            <Link to="/" className="bg-surface text-primary px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-surface-container-highest transition-colors shadow-lg hover:shadow-xl active:scale-95 text-title-md shrink-0">
+            <Link to="/materials" className="bg-surface text-primary px-8 py-4 rounded-2xl font-bold flex items-center gap-3 hover:bg-surface-container-highest transition-colors shadow-lg hover:shadow-xl active:scale-95 text-title-md shrink-0">
               <span className="material-symbols-outlined text-[28px]">add_circle</span>
               إضافة مادة جديدة
             </Link>
