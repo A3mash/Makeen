@@ -82,9 +82,9 @@ export default function ActivityHeatmap() {
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full flex flex-col items-center">
       
-      <div className="overflow-x-auto w-full custom-scrollbar pb-4">
+      <div className="overflow-x-auto w-full custom-scrollbar pb-4 flex justify-center">
         <div className="w-max">
           {/* Month Labels */}
           <div className="flex text-label-sm text-on-surface-variant mb-2 w-full">
@@ -115,7 +115,7 @@ export default function ActivityHeatmap() {
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-end gap-2 text-label-sm text-on-surface-variant">
+      <div className="mt-2 flex items-center justify-center w-full gap-2 text-label-sm text-on-surface-variant">
         <span>أقل</span>
         <div className="w-3 h-3 rounded-[2px] bg-surface-container-high border border-outline-variant/30"></div>
         <div className="w-3 h-3 rounded-[2px] bg-primary-fixed-dim/50 border border-primary-fixed-dim"></div>
