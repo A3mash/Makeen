@@ -1,13 +1,37 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import type { Question } from './db';
 
-const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+// Collect all configured API keys from environment
+const rawKeys = [
+  import.meta.env.VITE_GEMINI_API_KEY,
+  import.meta.env.VITE_GEMINI_API_KEY_1,
+  import.meta.env.VITE_GEMINI_API_KEY_2,
+  import.meta.env.VITE_GEMINI_API_KEY_3,
+  import.meta.env.VITE_GEMINI_API_KEY_4,
+  import.meta.env.VITE_GEMINI_API_KEY_5,
+].filter((k): k is string => Boolean(k && k.trim() !== '' && k !== 'your_api_key_here'));
 
-if (!apiKey || apiKey.trim() === '' || apiKey === 'your_api_key_here') {
-  throw new Error("لم يتم العثور على مفتاح VITE_GEMINI_API_KEY. يرجى إضافته في ملف .env وإيقاف خادم Vite ثم إعادة تشغيله.");
+if (rawKeys.length === 0) {
+  throw new Error("لم يتم العثور على أي مفتاح Gemini API. يرجى إضافة VITE_GEMINI_API_KEY في Vercel أو ملف .env");
 }
 
-const genAI = new GoogleGenerativeAI(apiKey);
+let currentKeyIndex = 0;
+
+function getGenAIModel(modelName: string = "gemini-flash-latest", temperature: number = 0.2) {
+  const activeKey = rawKeys[currentKeyIndex % rawKeys.length];
+  const genAI = new GoogleGenerativeAI(activeKey);
+  return genAI.getGenerativeModel({
+    model: modelName,
+    generationConfig: { temperature }
+  });
+}
+
+function rotateApiKey() {
+  if (rawKeys.length > 1) {
+    currentKeyIndex = (currentKeyIndex + 1) % rawKeys.length;
+    console.warn(`Rotating to API Key index ${currentKeyIndex}...`);
+  }
+}
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -22,8 +46,9 @@ async function executeWithRetry<T>(apiCall: () => Promise<T>, maxRetries = 3): P
                           error.message?.includes('exceeded');
                           
       if (isRateLimit && i < maxRetries - 1) {
-        const delay = 15000 * (i + 1); // Wait 15s, then 30s...
-        console.warn(`Rate limit hit (429). Waiting ${delay/1000}s before retrying (Attempt ${i + 1}/${maxRetries})...`);
+        rotateApiKey();
+        const delay = 5000 * (i + 1); // Short delay if rotating
+        console.warn(`Rate limit hit (429). Rotating key and waiting ${delay/1000}s (Attempt ${i + 1}/${maxRetries})...`);
         await sleep(delay);
       } else {
         throw error;
@@ -48,12 +73,7 @@ export const questionSchemaDescription = `
 
 export async function generateQuizFromText(chunkedText: string, materialId: string): Promise<Question[]> {
   
-  const model = genAI.getGenerativeModel({
-    model: "gemini-flash-latest",
-    generationConfig: {
-      temperature: 0.2, // Lower temperature for more factual and precise extraction
-    }
-  });
+  const model = getGenAIModel("gemini-flash-latest", 0.2);
 
   const prompt = `
 أنت معلم أكاديمي خبير. مهمتك هي توليد أسئلة اختيار من متعدد (MCQ) باللغة العربية بناءً على النص التالي.
@@ -122,13 +142,7 @@ export async function remediateKnowledgeGap(
   correctAnswer: string
 ): Promise<RemediationResult> {
 
-  // Using gemini-flash-latest since older models are deprecated and pro tier has quota issues on free tier
-  const model = genAI.getGenerativeModel({
-    model: "gemini-flash-latest",
-    generationConfig: {
-      temperature: 0.3,
-    }
-  });
+  const model = getGenAIModel("gemini-flash-latest", 0.3);
 
   const prompt = `
 الطالب اختار إجابة خاطئة لسؤال أكاديمي.
@@ -155,10 +169,7 @@ ${remediationSchemaDescription}
 }
 
 export async function generateMaterialMetadata(textChunk: string): Promise<{title: string, topic: string}> {
-  const model = genAI.getGenerativeModel({
-    model: "gemini-flash-latest",
-    generationConfig: { temperature: 0.3 }
-  });
+  const model = getGenAIModel("gemini-flash-latest", 0.3);
 
   const prompt = `
 أنت مساعد ذكي لتنظيم المواد الدراسية. بناءً على هذا المقتطف من مادة دراسية، اقترح:

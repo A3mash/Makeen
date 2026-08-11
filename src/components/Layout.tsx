@@ -16,7 +16,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'الإعدادات', path: '/settings', icon: 'settings' }
   ];
 
-  const hideNavigation = currentPath.startsWith('/quiz') || currentPath.startsWith('/review') || currentPath.startsWith('/edit-material');
+  const hideNavigation = currentPath.startsWith('/quiz') || currentPath.startsWith('/edit-material');
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row-reverse text-on-background font-body-md" dir="rtl">
