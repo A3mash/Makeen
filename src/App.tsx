@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
 import MaterialUploadHub from './pages/MaterialUploadHub';
 import GapChallenge from './pages/GapChallenge';
@@ -12,7 +12,8 @@ function App() {
   return (
     <Layout>
       <Routes>
-        <Route path="/" element={<MaterialUploadHub />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/materials" element={<MaterialUploadHub />} />
         <Route path="/quiz/:materialId" element={<MaterialQuiz />} />
         <Route path="/edit-material/:materialId" element={<EditMaterial />} />
         <Route path="/review" element={<Review />} />

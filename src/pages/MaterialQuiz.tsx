@@ -43,7 +43,7 @@ export default function MaterialQuiz() {
           لم يتم توليد أسئلة لهذه المادة بعد. حاول رفع المادة مرة أخرى.
         </p>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/materials')}
           className="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl hover:bg-primary-container hover:text-on-primary-container transition-colors shadow-sm"
         >
           العودة للمواد
@@ -56,8 +56,8 @@ export default function MaterialQuiz() {
     <div className="flex flex-col h-full overflow-hidden absolute inset-0 z-50 bg-background">
       <QuizContainer 
         initialQuestions={questions} 
-        onComplete={() => navigate('/')} 
-        onExit={() => navigate('/')}
+        onComplete={() => navigate('/materials')} 
+        onExit={() => navigate('/materials')}
       />
     </div>
   );

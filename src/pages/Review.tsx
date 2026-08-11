@@ -104,7 +104,7 @@ export default function Review() {
           ارفع مادة دراسية أولاً ليتم توليد أسئلة للمراجعة.
         </p>
         <button
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/materials')}
           className="bg-primary text-on-primary font-bold px-6 py-3 rounded-xl hover:bg-primary-container transition-colors shadow-sm"
         >
           العودة للمواد

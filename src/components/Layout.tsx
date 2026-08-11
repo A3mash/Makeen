@@ -10,7 +10,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const navItems = [
     { name: 'نظرة عامة', path: '/dashboard', icon: 'dashboard' },
-    { name: 'المواد', path: '/', icon: 'folder_open' },
+    { name: 'المواد', path: '/materials', icon: 'folder_open' },
     { name: 'المراجعة', path: '/review', icon: 'quiz' },
     { name: 'تحدي الفجوات', path: '/challenge', icon: 'psychology' },
     { name: 'الإعدادات', path: '/settings', icon: 'settings' }

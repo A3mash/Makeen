@@ -196,7 +196,7 @@ export default function EditMaterial() {
       <header className="bg-surface-container-lowest/80 backdrop-blur-md shadow-sm sticky top-0 z-30 px-6 py-4 flex items-center justify-between border-b border-outline-variant/30">
         <div className="flex items-center gap-4">
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/materials')}
             className="p-2 -mr-2 rounded-full hover:bg-black/5 transition-colors flex items-center justify-center text-on-surface"
             aria-label="العودة"
           >

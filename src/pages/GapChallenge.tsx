@@ -63,7 +63,7 @@ export default function GapChallenge() {
         <span className="material-symbols-outlined text-6xl text-primary-fixed mb-4">celebration</span>
         <h2 className="text-headline-sm font-bold mb-2">لا توجد فجوات معرفية!</h2>
         <p className="text-on-surface-variant mb-8 max-w-md">أنت متفوق! جميع المفاهيم التي تم اختبارك بها قد أجبت عليها بشكل صحيح أو تم إتقانها. استمر في دراسة مواد جديدة.</p>
-        <button onClick={() => navigate('/')} className="bg-primary text-on-primary px-6 py-3 rounded-full font-bold">
+        <button onClick={() => navigate('/materials')} className="bg-primary text-on-primary px-6 py-3 rounded-full font-bold">
           العودة للرئيسية
         </button>
       </div>
@@ -88,7 +88,7 @@ export default function GapChallenge() {
             بدء التحدي
           </button>
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/materials')}
             className="w-full mt-4 bg-transparent border border-outline-variant text-primary py-4 rounded-xl font-bold transition-colors hover:bg-surface-container-low"
           >
             تأجيل
@@ -99,7 +99,7 @@ export default function GapChallenge() {
           initialQuestions={challengeQuestions} 
           onComplete={() => {
             alert('تم إنهاء تحدي الفجوات! ستتم إعادتك للرئيسية.');
-            navigate('/');
+            navigate('/materials');
           }}
           onExit={() => setIsQuizStarted(false)}
         />
